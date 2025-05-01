@@ -1,0 +1,144 @@
+import java.util.Scanner;
+
+class Book {
+    private int bookID;
+    private String title;
+    private String author;
+    private boolean isAvailable;
+
+    public Book(int bookID, String title, String author, boolean isAvailable) {
+        this.bookID = bookID;
+        this.title = title;
+        this.author = author;
+        this.isAvailable = isAvailable;
+    }
+
+    public int getBookID() {
+        return bookID;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getDetails() {
+        return "ID: " + bookID + ", Title: " + title + ", Author: " + author + ", Available: " + isAvailable;
+    }
+}
+
+class Library {
+    private Book[] books;
+    private int count;
+
+    public Library() {
+        books = new Book[5];
+        count = 0;
+    }
+
+    public void addBook(Book book) {
+        if (count < books.length) {
+            books[count++] = book;
+            System.out.println("Book added.");
+        } else {
+            System.out.println("Library is full.");
+        }
+    }
+
+    public void removeBook(int bookID) {
+        boolean removed = false;
+        for (int i = 0; i < count; i++) {
+            if (books[i].getBookID() == bookID) {
+                for (int j = i; j < count - 1; j++) {
+                    books[j] = books[j + 1];
+                }
+                books[--count] = null;
+                System.out.println("Book removed.");
+                removed = true;
+                break;
+            }
+        }
+        if (!removed) {
+            System.out.println("Book ID not found.");
+        }
+    }
+
+    public void searchBook(int bookID) {
+        for (int i = 0; i < count; i++) {
+            if (books[i].getBookID() == bookID) {
+                System.out.println("Book found: " + books[i].getDetails());
+                return;
+            }
+        }
+        System.out.println("Book not found.");
+    }
+
+    public void displayBooks() {
+        if (count == 0) {
+            System.out.println("No books in library.");
+            return;
+        }
+        for (int i = 0; i < count; i++) {
+            System.out.println(books[i].getDetails());
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Library library = new Library();
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\n--- Library Menu ---");
+            System.out.println("1. Add Book");
+            System.out.println("2. Remove Book");
+            System.out.println("3. Search Book");
+            System.out.println("4. Display Books");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            int choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Book ID: ");
+                    int id = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Enter Title: ");
+                    String title = sc.nextLine();
+                    System.out.print("Enter Author: ");
+                    String author = sc.nextLine();
+                    Book b = new Book(id, title, author, true);
+                    library.addBook(b);
+                    break;
+
+                case 2:
+                    System.out.print("Enter Book ID to remove: ");
+                    int removeId = sc.nextInt();
+                    library.removeBook(removeId);
+                    break;
+
+                case 3:
+                    System.out.print("Enter Book ID to search: ");
+                    int searchId = sc.nextInt();
+                    library.searchBook(searchId);
+                    break;
+
+                case 4:
+                    library.displayBooks();
+                    break;
+
+                case 5:
+                    System.out.println("Exiting...");
+                    sc.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+}
